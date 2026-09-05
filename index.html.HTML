@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planner de Estudos 60 Dias - SAAE Chapada dos Guimarães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a5f7a;
+            --primary-light: #f0f7f9;
+            --accent-color: #57c5b6;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --border-color: #e2e8f0;
+            --gray-text: #718096;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark-color);
+            background-color: #f3f4f6;
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+
+        /* Top Planner Header */
+        .header {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: var(--gray-text);
+            margin-top: 4px;
+        }
+
+        .badge-cargo {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Overview Stats Panel */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .card-stat {
+            background-color: var(--light-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-stat h3 {
+            font-size: 11px;
+            color: var(--gray-text);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-stat p {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Phase Styling */
+        .phase-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            background-color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Study Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        thead {
+            background-color: var(--primary-light);
+        }
+
+        th {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 2px solid var(--border-color);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background-color: #fafbfc;
+        }
+
+        /* Form Controls */
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .center-col {
+            text-align: center;
+        }
+
+        .col-dia {
+            font-weight: 700;
+            color: var(--primary-color);
+            width: 50px;
+        }
+
+        .col-check {
+            width: 40px;
+            text-align: center;
+        }
+
+        .col-meta {
+            width: 80px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .col-rev {
+            width: 65px;
+            text-align: center;
+        }
+
+        .input-notes {
+            width: 100%;
+            padding: 4px 8px;
+            border: none;
+            border-bottom: 1px dotted var(--border-color);
+            font-family: inherit;
+            font-size: 12px;
+            background: transparent;
+        }
+
+        .input-notes:focus {
+            outline: none;
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* Printable Page-Break Logic */
+        .page-break {
+            page-break-before: always;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+        }
+
+        /* Custom Week Header */
+        .week-header {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--primary-color);
+            padding: 15px 0 8px 0;
+            border-bottom: 1px solid var(--primary-color);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Print Media Queries */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+            .no-print {
+                display: none;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            tr {
+                page-break-inside: avoid;
+            }
+            input[type="text"] {
+                border-bottom: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">
+                <h1>Cronograma 60 Dias</h1>
+                <p>Planejamento de Estudos de Alta Performance - SAAE CG</p>
+            </div>
+            <span class="badge-cargo">Agente Administrativo</span>
+        </div>
+
+        <!-- Estatísticas Gerais -->
+        <div class="overview-grid">
+            <div class="card-stat">
+                <h3>Carga Diária</h3>
+                <p>3h a 4h/Dia</p>
+            </div>
+            <div class="card-stat">
+                <h3>Peso Específico</h3>
+                <p>30 Pontos (60%)</p>
+            </div>
+            <div class="card-stat">
+                <h3>Data da Prova</h3>
+                <p>22/11/2026</p>
+            </div>
+            <div class="card-stat">
+                <h3>Meta Mínima</h3>
+                <p>25 Pontos (50%)</p>
+            </div>
+        </div>
+
+        <!-- Instruções de Metodologia -->
+        <div style="background-color: var(--light-color); padding: 15px; border-radius: 8px; font-size: 12px; margin-bottom: 30px; border-left: 4px solid var(--accent-color);">
+            <strong>Metodologia Aplicada:</strong>
+            <ul style="margin-left: 20px; margin-top: 5px;">
+                <li><strong>Revisão de 24h:</strong> No início da sessão, gaste 15 min ativamente revendo os pontos do dia anterior.</li>
+                <li><strong>Revisão de 7d:</strong> No 6º dia de cada ciclo, faça uma consolidação ativa do conhecimento da semana.</li>
+                <li><strong>7º Dia (Descanso/Simulado):</strong> Resolva simulados e recupere as energias para o próximo ciclo de estudos.</li>
+            </ul>
+        </div>
+
+        <!-- FASE 1 -->
+        <div class="phase-title">Fase 1: Estudo Teórico e Prático (Dias 1 a 50)</div>
+
+        <!-- SEMANA 1 -->
+        <div class="no-break">
+            <div class="week-header">
+                <span>Ciclo Semana 1: ADM Pública, Português e Ética</span>
+                <span style="font-size: 11px; color: var(--gray-text);">Estudo Dirigido</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Disciplina / Tópico Teórico e Prático</th>
+                        <th class="col-meta">Questões</th>
+                        <th class="col-rev">Rev. 24h</th>
+                        <th class="col-rev">Rev. 7d</th>
+                        <th>% Acertos / Anotações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">01</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Princípios básicos da Administração Pública (Legalidade e Impessoalidade)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev" style="background:#f1f5f9;"><input type="checkbox" disabled></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">02</td>
+                        <td><strong>Língua Portuguesa:</strong> Leitura e compreensão de textos; Modos de organização do discurso</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">03</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Princípios de ADM Pública (Moralidade, Publicidade e Eficiência)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">04</td>
+                        <td><strong>Língua Portuguesa:</strong> Gêneros do discurso; Coesão e Coerência textual</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">05</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Ética e Conduta no Serviço Público (Comportamento profissional e sigilo)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">06</td>
+                        <td><strong>Revisão de 7 Dias:</strong> Resolução de Questões sobre os temas da Semana 1</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev" style="background:#e6f4ea;"><input type="checkbox" checked></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SEMANA 2 -->
+        <div class="no-break" style="margin-top: 20px;">
+            <div class="week-header">
+                <span>Ciclo Semana 2: Rotinas Administrativas e RLM</span>
+                <span style="font-size: 11px; color: var(--gray-text);">Estudo Dirigido</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Disciplina / Tópico Teórico e Prático</th>
+                        <th class="col-meta">Questões</th>
+                        <th class="col-rev">Rev. 24h</th>
+                        <th class="col-rev">Rev. 7d</th>
+                        <th>% Acertos / Anotações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">07</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Rotinas administrativas: Elaboração e tramitação de ofícios e circulares</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">08</td>
+                        <td><strong>Raciocínio Lógico e Matemático:</strong> Raciocínio lógico numérico e conjuntos</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">09</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Elaboração de memorandos, relatórios administrativos e atas oficiais</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">10</td>
+                        <td><strong>Raciocínio Lógico e Matemático:</strong> Múltiplos, divisores e médias aritméticas</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">11</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Comunicação administrativa: técnicas de atendimento ao cidadão e ética</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">12</td>
+                        <td><strong>Revisão de 7 Dias:</strong> Resolução de Questões sobre os temas da Semana 2</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev" style="background:#e6f4ea;"><input type="checkbox" checked></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SEMANA 3 -->
+        <div class="no-break">
+            <div class="week-header">
+                <span>Ciclo Semana 3: Gestão de Documentos e Gramática</span>
+                <span style="font-size: 11px; color: var(--gray-text);">Estudo Dirigido</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Disciplina / Tópico Teórico e Prático</th>
+                        <th class="col-meta">Questões</th>
+                        <th class="col-rev">Rev. 24h</th>
+                        <th class="col-rev">Rev. 7d</th>
+                        <th>% Acertos / Anotações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">13</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Gestão de arquivos: classificação, organização e protocolo</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">14</td>
+                        <td><strong>Língua Portuguesa:</strong> Conectivos e mecanismos de coesão</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">15</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Tramitação de documentos e arquivos (Arquivos ativos e inativos)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">16</td>
+                        <td><strong>Língua Portuguesa:</strong> Estrutura das classes de palavras e verbos (Vozes e transitividade)</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">17</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Conservação física e digital de acervos e documentos oficiais</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">18</td>
+                        <td><strong>Revisão de 7 Dias:</strong> Questões de fixação dos temas da Semana 3</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev" style="background:#e6f4ea;"><input type="checkbox" checked></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SEMANA 4 -->
+        <div class="no-break" style="margin-top: 20px;">
+            <div class="week-header">
+                <span>Ciclo Semana 4: Orçamento e Informática Teórica</span>
+                <span style="font-size: 11px; color: var(--gray-text);">Estudo Dirigido</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Disciplina / Tópico Teórico e Prático</th>
+                        <th class="col-meta">Questões</th>
+                        <th class="col-rev">Rev. 24h</th>
+                        <th class="col-rev">Rev. 7d</th>
+                        <th>% Acertos / Anotações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">19</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Noções básicas de orçamento público e execução orçamentária</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">20</td>
+                        <td><strong>Noções de Informática:</strong> Windows 10/11 pro (Pastas, atalhos, painel de controle)</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">21</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Controle de despesas e levantamento de dados administrativos</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">22</td>
+                        <td><strong>Noções de Informática:</strong> Noções de Hardware e Software (Memória RAM/ROM e Processamento)</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">23</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Correspondência oficial (recebimento, registro, distribuição)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">24</td>
+                        <td><strong>Revisão de 7 Dias:</strong> Questões de fixação dos temas da Semana 4</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev" style="background:#e6f4ea;"><input type="checkbox" checked></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SEMANA 5 -->
+        <div class="no-break">
+            <div class="week-header">
+                <span>Ciclo Semana 5: Contabilidade Pública e RLM</span>
+                <span style="font-size: 11px; color: var(--gray-text);">Estudo Dirigido</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Disciplina / Tópico Teórico e Prático</th>
+                        <th class="col-meta">Questões</th>
+                        <th class="col-rev">Rev. 24h</th>
+                        <th class="col-rev">Rev. 7d</th>
+                        <th>% Acertos / Anotações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">25</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Noções de contabilidade pública: Notas Fiscais, recibos, empenhos</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">26</td>
+                        <td><strong>Raciocínio Lógico e Matemático:</strong> Porcentagens e Proporcionalidade Direta e Indireta</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">27</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Organização do trabalho: Gestão de agendas e organização de arquivos</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">28</td>
+                        <td><strong>Raciocínio Lógico e Matemático:</strong> Progressões de letras, figuras, lógica sequencial e diagramas</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">29</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Compras e cotações de preços (Cotações para Saneamento/Água)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">30</td>
+                        <td><strong>Revisão de 7 Dias:</strong> Questões de fixação dos temas da Semana 5</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev" style="background:#e6f4ea;"><input type="checkbox" checked></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SEMANA 6 -->
+        <div class="no-break" style="margin-top: 20px;">
+            <div class="week-header">
+                <span>Ciclo Semana 6: Legislação Municipal e Português</span>
+                <span style="font-size: 11px; color: var(--gray-text);">Estudo Dirigido</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Disciplina / Tópico Teórico e Prático</th>
+                        <th class="col-meta">Questões</th>
+                        <th class="col-rev">Rev. 24h</th>
+                        <th class="col-rev">Rev. 7d</th>
+                        <th>% Acertos / Anotações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">31</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Serviços externos administrativos (Bancos, correios e repartições públicas)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">32</td>
+                        <td><strong>Língua Portuguesa:</strong> Regência verbal, nominal e emprego do sinal da Crase</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">33</td>
+                        <td><strong>Legislação Municipal:</strong> Lei n.º 1447/2011 e suas alterações e LC n.º 62/2014</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">34</td>
+                        <td><strong>Língua Portuguesa:</strong> Concordância nominal e verbal; Acentuação e Ortografia</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">35</td>
+                        <td><strong>Legislação Municipal:</strong> Lei n.º 1570/2014 e LC n.º 97/2023 (Legislação Local)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">36</td>
+                        <td><strong>Revisão de 7 Dias:</strong> Questões de fixação dos temas da Semana 6</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev" style="background:#e6f4ea;"><input type="checkbox" checked></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- SEMANA 7 -->
+        <div class="no-break">
+            <div class="week-header">
+                <span>Ciclo Semana 7: Aplicações Office, Estatística e RLM Avançado</span>
+                <span style="font-size: 11px; color: var(--gray-text);">Estudo Dirigido</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Disciplina / Tópico Teórico e Prático</th>
+                        <th class="col-meta">Questões</th>
+                        <th class="col-rev">Rev. 24h</th>
+                        <th class="col-rev">Rev. 7d</th>
+                        <th>% Acertos / Anotações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">37</td>
+                        <td><strong>Noções de Informática:</strong> MS-Word e Google Documentos (Edição e formatação de textos)</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">38</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Estatística básica: Coleta, organização e interpretação de dados</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">39</td>
+                        <td><strong>Noções de Informática:</strong> MS-Excel e Google Planilhas (Fórmulas, funções e tabelas)</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">40</td>
+                        <td><strong>Raciocínio Lógico e Matemático:</strong> Problemas de contagem (Arranjos, Combinações e Permutações)</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">41</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Elaboração de planilhas de controle administrativo e financeiro</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">42</td>
+                        <td><strong>Revisão de 7 Dias:</strong> Questões de fixação dos temas da Semana 7</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev" style="background:#e6f4ea;"><input type="checkbox" checked></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SEMANA 8 + TRANSIÇÃO -->
+        <div class="no-break" style="margin-top: 20px;">
+            <div class="week-header">
+                <span>Ciclo Semana 8: Segurança da Informação e Consolidação Final</span>
+                <span style="font-size: 11px; color: var(--gray-text);">Estudo Dirigido</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Disciplina / Tópico Teórico e Prático</th>
+                        <th class="col-meta">Questões</th>
+                        <th class="col-rev">Rev. 24h</th>
+                        <th class="col-rev">Rev. 7d</th>
+                        <th>% Acertos / Anotações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">43</td>
+                        <td><strong>Noções de Informática:</strong> Segurança da informação: Antivírus, firewall e procedimentos de backup</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">44</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Gestão e controle orçamentário aplicado ao SAAE</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">45</td>
+                        <td><strong>Noções de Informática:</strong> Conceitos de Internet, Intranet e Ferramentas Google (Drive, Gmail)</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">46</td>
+                        <td><strong>Conhecimentos Específicos:</strong> Normas de conduta, ética pública e sigilo (Lei de Acesso à Informação)</td>
+                        <td class="col-meta">20 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">47</td>
+                        <td><strong>Noções de Informática:</strong> Vírus, Worms, pragas virtuais e segurança em redes de computadores</td>
+                        <td class="col-meta">15 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">48</td>
+                        <td><strong>Legislação Municipal:</strong> Revisão unificada de toda a legislação municipal cobrada</td>
+                        <td class="col-meta">25 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev" style="background:#e6f4ea;"><input type="checkbox" checked></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr style="background:#fffcf4;">
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">49</td>
+                        <td><strong>Consolidação Geral I:</strong> Revisão por resumos dos tópicos com maior índice de erros</td>
+                        <td class="col-meta">25 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr style="background:#fffcf4;">
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">50</td>
+                        <td><strong>Consolidação Geral II:</strong> Leitura das anotações de Conhecimentos Específicos do SAAE</td>
+                        <td class="col-meta">25 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- FASE 2 -->
+        <div class="phase-title" style="background-color: var(--accent-color);">Fase 2: Reta Final e Revisão Intensiva (Dias 51 a 60)</div>
+
+        <div class="no-break">
+            <div style="background-color: #f0fdf4; padding: 15px; border-radius: 8px; font-size: 12px; margin-bottom: 20px; border-left: 4px solid #16a34a; color: #166534;">
+                <strong>Objetivo da Reta Final:</strong> Foco exclusivo em resoluções de provas completas de concursos do <strong>Instituto Selecon</strong>, simulados com controle de tempo (4 horas de duração [5]) e revisão pontual através de cartões de erro ou resumos direcionados.
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-check">[ ]</th>
+                        <th class="col-dia">Dia</th>
+                        <th>Atividade de Simulado / Revisão Estratégica Selecon</th>
+                        <th class="col-meta">Meta Questões</th>
+                        <th class="col-rev">Cronometrado</th>
+                        <th class="col-rev">Revisado</th>
+                        <th>% Desempenho / Anotações de Erros</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">51</td>
+                        <td><strong>Simulado Geral Completo:</strong> 30 questões no modelo oficial do edital SAAE [1]</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="Nota / pontos obtidos"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">52</td>
+                        <td>Análise minuciosa de erros do Simulado 1 + Revisão teórica rápida dos pontos falhos</td>
+                        <td class="col-meta">Teoria</td>
+                        <td class="col-rev" style="background:#f1f5f9;"><input type="checkbox" disabled></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="Anotações sobre erros"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">53</td>
+                        <td><strong>Treino Intensivo de Engenharia Reversa:</strong> Questões de Língua Portuguesa (Selecon)</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">54</td>
+                        <td><strong>Treino Intensivo de Engenharia Reversa:</strong> Questões de Raciocínio Lógico (Selecon)</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">55</td>
+                        <td><strong>Treino Intensivo de Engenharia Reversa:</strong> Questões de Noções de Informática (Selecon)</td>
+                        <td class="col-meta">25 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">56</td>
+                        <td><strong>Simulado Geral Completo Nº 2:</strong> Cronometrado e sem consulta (Foco no SAAE)</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="Nota / pontos obtidos"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">57</td>
+                        <td>Análise de erros do Simulado 2 + Memorização de mnemônicos e fórmulas matemáticas</td>
+                        <td class="col-meta">Teoria</td>
+                        <td class="col-rev" style="background:#f1f5f9;"><input type="checkbox" disabled></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="Anotações"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">58</td>
+                        <td>Resolução de Provas Anteriores Selecon de Agente Administrativo (ex: São José / Rondonópolis)</td>
+                        <td class="col-meta">40 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr>
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">59</td>
+                        <td>Resolução de Prova Anterior Selecon (Nova Mutum) [6] + Revisão final da Lei Orgânica Municipal</td>
+                        <td class="col-meta">30 Qs</td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="% acertos / notas"></td>
+                    </tr>
+                    <tr style="background:#fffcf4;">
+                        <td class="col-check"><input type="checkbox"></td>
+                        <td class="col-dia">60</td>
+                        <td><strong>Véspera da Prova:</strong> Leitura suave de mnemônicos de Português/Informática e descanso mental</td>
+                        <td class="col-meta">Leitura</td>
+                        <td class="col-rev" style="background:#f1f5f9;"><input type="checkbox" disabled></td>
+                        <td class="col-rev"><input type="checkbox"></td>
+                        <td><input type="text" class="input-notes" placeholder="Pronto para a aprovação!"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>
